@@ -21,11 +21,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import org.kitteh.pastegg.Paste;
-import org.kitteh.pastegg.PasteBuilder;
-import org.kitteh.pastegg.PasteContent;
-import org.kitteh.pastegg.PasteFile;
-import org.kitteh.pastegg.Visibility;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -128,32 +123,32 @@ public class MiscUtils {
             return;
         }
         ZonedDateTime expire = ZonedDateTime.now().plusMinutes(60);
-        PasteFile file = new PasteFile("Prism 结果",
-                new PasteContent(PasteContent.ContentType.TEXT, results));
-
-        final PasteBuilder.PasteResult result
-                = new PasteBuilder().name("Prism 结果")
-                .setApiKey(Prism.getPasteKey())
-                .expires(expire)
-                .addFile(file)
-                .visibility(Visibility.UNLISTED)
-                .build();
-        if (result.getPaste().isPresent()) {
-            Paste paste = result.getPaste().get();
-            String urlpaste = prismWebUrl + paste.getId();
-            Prism.messenger.sendMessage(sender,
-                    Prism.messenger.playerSuccess("已成功粘贴结果: "
-                            + urlpaste
-                            + paste.getId()).clickEvent(ClickEvent.openUrl(urlpaste)));
-        } else {
-            String message = result.getMessage().isPresent() ? result.getMessage().get() : "";
-            Prism.messenger.sendMessage(sender,
-                    Prism.messenger.playerError(
-                            Component.text("无法粘贴结果 (")
-                                    .append(Component.text(message).color(NamedTextColor.YELLOW))
-                                    .append(Component.text(")."))
-                    ));
-        }
+//        PasteFile file = new PasteFile("Prism 结果",
+//                new PasteContent(PasteContent.ContentType.TEXT, results));
+//
+//        final PasteBuilder.PasteResult result
+//                = new PasteBuilder().name("Prism 结果")
+//                .setApiKey(Prism.getPasteKey())
+//                .expires(expire)
+//                .addFile(file)
+//                .visibility(Visibility.UNLISTED)
+//                .build();
+//        if (result.getPaste().isPresent()) {
+//            Paste paste = result.getPaste().get();
+//            String urlpaste = prismWebUrl + paste.getId();
+//            Prism.messenger.sendMessage(sender,
+//                    Prism.messenger.playerSuccess("已成功粘贴结果: "
+//                            + urlpaste
+//                            + paste.getId()).clickEvent(ClickEvent.openUrl(urlpaste)));
+//        } else {
+//            String message = result.getMessage().isPresent() ? result.getMessage().get() : "";
+//            Prism.messenger.sendMessage(sender,
+//                    Prism.messenger.playerError(
+//                            Component.text("无法粘贴结果 (")
+//                                    .append(Component.text(message).color(NamedTextColor.YELLOW))
+//                                    .append(Component.text(")."))
+//                    ));
+//        }
 
     }
 
