@@ -74,6 +74,7 @@ public class ItemStackActionData {
     public Map<Integer, ItemStackActionData> shulkerBoxInv;  // Deprecated
     public Map<Integer, ItemStackActionData> blockInventory;
 
+    @SuppressWarnings("removal")
     public static ItemStackActionData createData(ItemStack item, int quantity, short durability, Map<Enchantment, Integer> enchantments) {
 
         ItemStackActionData actionData = new ItemStackActionData();

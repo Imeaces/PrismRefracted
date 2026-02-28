@@ -60,35 +60,42 @@ dependencies {
 //    implementation 'net.kyori:adventure-platform-bukkit:4.3.1' // Not for 1.20.3/4
     implementation 'net.kyori:adventure-platform-bukkit:4.4.1'
     implementation 'net.kyori:adventure-text-serializer-plain:4.15.0'
-    implementation 'de.tr7zw:item-nbt-api:2.12.2'
+    implementation 'de.tr7zw:item-nbt-api:2.15.5'
     implementation 'org.bstats:bstats-bukkit:3.0.0'
     implementation project(':Prism-Api')
 }
 
-jar {
-    actions = []
-    dependsOn = []
-    dependsOn('shadowJar')
+tasks.assemble {
+    dependsOn(tasks.shadowJar)
 }
 
 shadowJar {
     String fileName = "Prism-" + project.version + ".jar"
     archiveFileName.set(fileName)
+
     dependencies {
         exclude(dependency('org.checkerframework:.*'))
         exclude(dependency('org.slf4j:.*'))
         exclude(dependency('org.intellij:.*'))
         exclude(dependency('org.jetbrains:.*'))
         exclude(dependency('com.google.code.gson:.*'))
+        exclude(dependency("org.jspecify:jspecify"))
     }
 
-    relocate 'io.papermc.lib', 'network.darkhelmet.prism.paperlib'
-    relocate 'com.zaxxer', 'network.darkhelmet.prism.zaxxer'
-    relocate 'net.kyori', 'network.darkhelmet.prism.kyori'
-    relocate 'org.kitteh', 'network.darkhelmet.prism.kitteh'
-    relocate 'org.apache', 'network.darkhelmet.prism.apache'
-    relocate 'de.tr7zw.changeme.nbtapi', 'network.darkhelmet.prism.de.tr7zw.nbtapi'
-    relocate 'org.bstats', 'io.github.rothes.prismcn.lib.org.bstats'
+    def relocatePrefix = "org.imeaces.prismRefracted.shadow"
+    def relocatePackages = [
+            "io.papermc.lib",
+            "com.zaxxer",
+            "net.kyori",
+            "org.kitteh",
+            "org.apache",
+            "de.tr7zw.changeme.nbtapi",
+            "org.bstats"
+    ]
+
+    for (var pkg : relocatePackages){
+        relocate(pkg, "${relocatePrefix}.${pkg}")
+    }
 
     minimize()
 }
@@ -98,19 +105,4 @@ runServer {
     // This is the only required configuration besides applying the plugin.
     // Your plugin's jar (or shadowJar if present) will be used automatically.
     minecraftVersion("1.19.2")
-}
-
-gradle.buildFinished {
-    // Clean Gradle resources cache
-    deleteDirectory(new File(project.buildDir, "resources/"))
-}
-
-boolean deleteDirectory(File directory) {
-    File[] contents = directory.listFiles();
-    if (contents != null) {
-        for (File file : contents) {
-            deleteDirectory(file);
-        }
-    }
-    return directory.delete();
 }

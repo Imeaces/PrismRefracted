@@ -16,6 +16,7 @@ import network.darkhelmet.prism.measurement.TimeTaken;
 import network.darkhelmet.prism.utils.IntPair;
 import network.darkhelmet.prism.utils.ItemUtils;
 import network.darkhelmet.prism.utils.TypeUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -562,15 +563,16 @@ public class SqlSelectQueryBuilder extends QueryBuilder implements SelectQuery {
                             validBlockId = true;
                             baseHandler.setMaterial(item.getType());
 
-                            BlockData newData;
+                            BlockData newData = null;
 
                             try {
                                 newData = Bukkit.createBlockData(item.getType());
-                            } catch (IllegalArgumentException e) {
+                            } catch (IllegalArgumentException | NullPointerException e) {
                                 // This exception occurs, for example, with "ItemStack{DIAMOND_LEGGINGS x 1}"
-                                Prism.debug("记录 #" + rowId + " 发生了 IllegalArgumentException "
-                                        + ", 在为 " + item.toString() + " 调用 createBlockData 时.");
-                                newData = null;
+                                Prism.debug(String.format(
+                                        "记录条目 #%s 出现错误：为 %s 调用 createBlockData() 时出现错误 %s",
+                                        rowId, item, e
+                                ));
                             }
 
                             baseHandler.setBlockData(newData);
